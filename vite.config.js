@@ -1,5 +1,5 @@
 export default {
-  base: '/',
+  base: '/dyson/',
   build: {
       assetsDir: 'assets',
     },
