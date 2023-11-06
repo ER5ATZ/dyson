@@ -17,6 +17,7 @@ main {
     z-index: 99;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+    font-family: "Gill Sans", sans-serif;
     opacity: 0.7;
     padding: 120px 0px;
 }

@@ -83,7 +83,7 @@ innerRing.position.copy(ring.position);
 
 scene.add(innerRing);
 
-const pointLight = new THREE.PointLight(0xffffff);
+const pointLight = new THREE.PointLight(0xfff3b5);
 pointLight.intensity = 100;
 pointLight.decay = 1;
 pointLight.castShadow = true;
@@ -114,6 +114,7 @@ Array(300).fill().forEach(addStar);
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
 
+
 function animate() {
     requestAnimationFrame(animate);
     customMaterial.uniforms.time.value += 0.01;
@@ -143,5 +144,5 @@ moveCamera();
 document.body.onscroll = moveCamera;
 
 animate();
-console.log(scene);
+//console.log(scene);
 document.body.appendChild(renderer.domElement);

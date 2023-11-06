@@ -24,10 +24,10 @@ To run the project locally, follow these steps:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/dyson-sphere-project.git
+git clone https://github.com/ER5ATZ/dyson.git
 
 # Change directory to the project folder
-cd dyson-sphere-project
+cd dyson
 
 # Install dependencies
 npm install
@@ -43,7 +43,9 @@ Explore the interactive Dyson Sphere visualization by opening the provided URL i
 ## Sources
 
 - [Wikipedia - Dyson Sphere](https://en.wikipedia.org/wiki/Dyson_sphere)
-- [Space Textures Library](https://example.com/space-textures)
+- [Space Textures Library](https://www.solarsystemscope.com/textures/)
+- [Space Background](https://www.pexels.com/photo/stars-during-night-time-176851/)
+- [Ring Texture (edited)](https://ambientcg.com/view?id=Tiles129B)
 - [Three.js Documentation](https://threejs.org/docs/)
 
 ## Credits
