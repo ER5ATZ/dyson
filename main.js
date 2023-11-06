@@ -16,8 +16,8 @@ camera.position.set(0, 0, 30);
 
 renderer.render(scene, camera);
 
-const sunTexture = new THREE.TextureLoader().load('sun.jpg');
-const normalTexture = new THREE.TextureLoader().load('sunno.jpg');
+const sunTexture = new THREE.TextureLoader().load('public/sun.jpg');
+const normalTexture = new THREE.TextureLoader().load('public/sunno.jpg');
 const sun = new THREE.Mesh(
     new THREE.SphereGeometry(3, 32, 32),
     new THREE.MeshStandardMaterial({
@@ -27,7 +27,7 @@ const sun = new THREE.Mesh(
 scene.add(sun);
 
 const customUniforms = {
-    opacityMap: { value: new THREE.TextureLoader().load('rineg.png') },
+    opacityMap: { value: new THREE.TextureLoader().load('public/rineg.png') },
     time: { value: 0.0 }
 };
 const customMaterial = new THREE.ShaderMaterial({
@@ -56,7 +56,7 @@ const customMaterial = new THREE.ShaderMaterial({
     transparent: true
 });
 
-const texture = new THREE.TextureLoader().load('ring.png');
+const texture = new THREE.TextureLoader().load('public/ring.png');
 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 texture.repeat.set(10, 1);
 
@@ -111,7 +111,7 @@ function addStar() {
 }
 
 Array(300).fill().forEach(addStar);
-const spaceTexture = new THREE.TextureLoader().load('space.jpg');
+const spaceTexture = new THREE.TextureLoader().load('public/space.jpg');
 scene.background = spaceTexture;
 
 function animate() {
