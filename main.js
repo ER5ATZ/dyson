@@ -2,6 +2,10 @@ import './style.css'
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+//import { EffectComposer, EffectPass, RenderPass, UnrealBloomPass } from "postprocessing";
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -84,7 +88,7 @@ innerRing.position.copy(ring.position);
 scene.add(innerRing);
 
 const pointLight = new THREE.PointLight(0xfff3b5);
-pointLight.intensity = 100;
+pointLight.intensity = 20;
 pointLight.decay = 1;
 pointLight.castShadow = true;
 pointLight.shadow.mapSize.width = 256;
@@ -100,6 +104,13 @@ scene.add(pointLight, ambientLight);
 //scene.add(lightHelper, gridHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
+const composer = new EffectComposer(renderer);
+
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
+
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+composer.addPass(bloomPass);
 
 function addStar() {
     const geometry = new THREE.SphereGeometry(0.25, 24, 24);
@@ -114,7 +125,6 @@ Array(300).fill().forEach(addStar);
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
 
-
 function animate() {
     requestAnimationFrame(animate);
     customMaterial.uniforms.time.value += 0.01;
@@ -127,7 +137,8 @@ function animate() {
     innerRing.rotation.z += 0.0002;
     sun.rotation.z -= 0.00009;
     controls.update();
-    renderer.render(scene, camera);
+    composer.render(scene, camera);
+    //renderer.render(scene, camera);
 }
 
 function moveCamera() {
