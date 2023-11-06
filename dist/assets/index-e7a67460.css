@@ -1,1 +1,0 @@
-canvas{position:fixed;top:0;left:0}header{color:#fff;grid-column:2 / span 6;background:black;padding:2rem}main{position:absolute;top:-140px;z-index:99;display:grid;grid-template-columns:repeat(12,1fr);opacity:.7;padding:120px 0}footer{position:absolute;background:black}section{color:#fff;grid-column:2 / 8;background:black;padding:1rem}
