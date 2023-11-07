@@ -3,7 +3,7 @@
 
 ## Overview
 
-The Dyson Sphere Project aims to demonstrate the concept of Dyson Spheres in a visually engaging manner. It combines space textures, 3D modeling, and interactive elements to provide an immersive experience.
+The Dyson Sphere Project aims to educate on the concept of Dyson Spheres in a visually engaging manner. It combines space textures, 3D modeling, and interactive elements to provide an immersive experience.
 
 ## Features
 
@@ -50,5 +50,5 @@ Explore the interactive Dyson Sphere visualization by opening the provided URL i
 
 ## Credits
 
-- Project developed by Your Name
+- Project developed by Andreas Ersch
 - Special thanks to fireship.io and open-source libraries used in the project.

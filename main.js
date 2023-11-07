@@ -154,6 +154,13 @@ function moveCamera() {
 moveCamera();
 document.body.onscroll = moveCamera;
 
+const toggle = document.getElementById('toggle');
+const textContainer = document.getElementById('text');
+let isVisible = true;
+toggle.addEventListener('click', () => {
+    textContainer.classList.toggle('hidden');
+});
+
 animate();
 //console.log(scene);
 document.body.appendChild(renderer.domElement);
