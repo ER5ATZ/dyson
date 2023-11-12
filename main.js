@@ -112,16 +112,27 @@ composer.addPass(renderPass);
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
 composer.addPass(bloomPass);
 
-function addStar() {
+function addStar(radiusStart, radiusEnd) {
     const geometry = new THREE.SphereGeometry(0.25, 24, 24);
     const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
     const star = new THREE.Mesh(geometry, material);
-    const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(200));
+
+    const radius = THREE.MathUtils.randFloat(radiusStart, radiusEnd);
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.random() * Math.PI;
+
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.sin(phi) * Math.sin(theta);
+    const z = radius * Math.cos(phi);
+
     star.position.set(x, y, z);
     scene.add(star);
 }
 
-Array(300).fill().forEach(addStar);
+const starsRadiusStart = 500;
+const starsRadiusEnd = 750;
+Array(300).fill().forEach(() => addStar(starsRadiusStart, starsRadiusEnd));
+
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
 
@@ -138,7 +149,6 @@ function animate() {
     sun.rotation.z -= 0.00009;
     controls.update();
     composer.render(scene, camera);
-    //renderer.render(scene, camera);
 }
 
 function moveCamera() {

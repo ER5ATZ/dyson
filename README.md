@@ -44,7 +44,6 @@ Explore the interactive Dyson Sphere visualization by opening the provided URL i
 
 - [Wikipedia - Dyson Sphere](https://en.wikipedia.org/wiki/Dyson_sphere)
 - [Space Textures Library](https://www.solarsystemscope.com/textures/)
-- [Space Background](https://www.pexels.com/photo/stars-during-night-time-176851/)
 - [Ring Texture (edited)](https://ambientcg.com/view?id=Tiles129B)
 - [Three.js Documentation](https://threejs.org/docs/)
 
