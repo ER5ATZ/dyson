@@ -2,7 +2,6 @@ import './style.css'
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-//import { EffectComposer, EffectPass, RenderPass, UnrealBloomPass } from "postprocessing";
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass';
@@ -155,10 +154,16 @@ let targetCameraPosition = new THREE.Vector3();
 let targetCameraRotation = new THREE.Euler();
 
 function moveCamera() {
-    const t = document.body.getBoundingClientRect().top * 25;
+    const scrollPosition = document.body.getBoundingClientRect().top;
+    const t = THREE.MathUtils.clamp(scrollPosition / window.innerHeight, -1, 1);
 
-    targetCameraPosition.set(t * -0.002, 0, t * -0.011);
-    targetCameraRotation.set(0, t * -0.002, 0);
+    const minZoom = 111;
+    const maxZoom = 1;
+
+    const zoomLevel = THREE.MathUtils.lerp(minZoom, maxZoom, (t + 1) / 2);
+
+    targetCameraPosition.set(0, 0, zoomLevel);
+    targetCameraRotation.set(0, 0, 0);
 
     camera.position.lerp(targetCameraPosition, 0.1);
     camera.rotation.y = targetCameraRotation.y;
