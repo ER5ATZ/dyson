@@ -151,14 +151,21 @@ function animate() {
     composer.render(scene, camera);
 }
 
+let targetCameraPosition = new THREE.Vector3();
+let targetCameraRotation = new THREE.Euler();
+
 function moveCamera() {
-    const t = document.body.getBoundingClientRect().top * -50;
+    const t = document.body.getBoundingClientRect().top * 25;
+
+    targetCameraPosition.set(t * -0.002, 0, t * -0.011);
+    targetCameraRotation.set(0, t * -0.002, 0);
+
+    camera.position.lerp(targetCameraPosition, 0.1);
+    camera.rotation.y = targetCameraRotation.y;
+
     sun.rotation.x += 0.05;
     sun.rotation.y += 0.075;
     sun.rotation.z += 0.05;
-    camera.position.z = t * -0.011;
-    camera.position.x = t * -0.002;
-    camera.rotation.y = t * -0.002;
 }
 
 moveCamera();
