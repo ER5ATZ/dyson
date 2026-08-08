@@ -35,12 +35,8 @@ texture.repeat.set(10, 1);
 const ringGeometry = new THREE.TorusGeometry(20, 2, 20, 200);
 const ringMaterial = new THREE.MeshStandardMaterial({
     map: texture,
-    emissiveMap: texture,
-    emissive: new THREE.Color(0x000000),
-    emissiveIntensity: 0.5,
     roughness: 0.3,
     transparent: true,
-    opacity: 1,
 });
 
 const ring = new THREE.Mesh(ringGeometry, ringMaterial);
@@ -61,14 +57,37 @@ scene.add(innerRing);
 const pointLight = new THREE.PointLight(0xfff3b5);
 pointLight.intensity = 20;
 pointLight.decay = 1;
-pointLight.castShadow = true;
-pointLight.shadow.mapSize.width = 256;
-pointLight.shadow.mapSize.height = 256;
-pointLight.shadow.bias = -0.001;
 
 const ambientLight = new THREE.AmbientLight(0xffffff);
 ambientLight.intensity = 2;
 scene.add(pointLight, ambientLight);
+
+// --- Lens flare (sprite-based, works with EffectComposer) ---
+function createFlareTexture(size) {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    gradient.addColorStop(0, 'rgba(255, 243, 181, 1.0)');
+    gradient.addColorStop(0.1, 'rgba(255, 230, 150, 0.6)');
+    gradient.addColorStop(0.4, 'rgba(255, 200, 100, 0.1)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+    return new THREE.CanvasTexture(canvas);
+}
+
+const flareTexture = createFlareTexture(256);
+const flareMaterial = new THREE.SpriteMaterial({
+    map: flareTexture,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    opacity: 0
+});
+const flareSprite = new THREE.Sprite(flareMaterial);
+flareSprite.scale.set(15, 15, 1);
+sun.add(flareSprite);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enabled = false; // disabled while text is visible (scroll mode)
@@ -103,6 +122,7 @@ function createStars(count, radiusStart, radiusEnd) {
 }
 
 createStars(300, 500, 750);
+createStars(150, 200, 400);
 
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
@@ -127,6 +147,16 @@ function animate() {
     innerRing.rotation.y += 0.0001 * speedMultiplier;
     innerRing.rotation.z += 0.0002 * speedMultiplier;
     sun.rotation.z -= 0.00009 * speedMultiplier;
+
+    // Flare intensity based on camera viewing angle toward sun
+    const cameraDir = new THREE.Vector3();
+    camera.getWorldDirection(cameraDir);
+    const toSun = new THREE.Vector3().subVectors(sun.position, camera.position).normalize();
+    const dot = cameraDir.dot(toSun);
+    // Flare visible when looking toward sun (dot > 0.8), peaks at dot = 1
+    const flareIntensity = THREE.MathUtils.smoothstep(dot, 0.85, 0.99);
+    flareMaterial.opacity = flareIntensity * 0.7;
+
     controls.update();
     composer.render(scene, camera);
 }
