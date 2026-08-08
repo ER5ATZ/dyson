@@ -44,6 +44,8 @@ const ringMaterial = new THREE.MeshStandardMaterial({
 });
 
 const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+ring.rotation.x = 0.25;
+ring.rotation.y = 0.15;
 scene.add(ring);
 
 const innerRingGeometry = new THREE.TorusGeometry(20, 1.9, 20, 200);
@@ -52,6 +54,7 @@ const innerRingMaterial = new THREE.LineBasicMaterial({ color: 'silver' });
 
 const innerRing = new THREE.LineSegments(innerRingWireframe, innerRingMaterial);
 innerRing.position.copy(ring.position);
+innerRing.rotation.copy(ring.rotation);
 
 scene.add(innerRing);
 
@@ -67,11 +70,8 @@ const ambientLight = new THREE.AmbientLight(0xffffff);
 ambientLight.intensity = 2;
 scene.add(pointLight, ambientLight);
 
-//const lightHelper = new THREE.PointLightHelper(pointLight);
-//const gridHelper = new THREE.GridHelper(200, 50);
-//scene.add(lightHelper, gridHelper);
-
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enabled = false; // disabled while text is visible (scroll mode)
 const composer = new EffectComposer(renderer);
 
 const renderPass = new RenderPass(scene, camera);
@@ -80,26 +80,29 @@ composer.addPass(renderPass);
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
 composer.addPass(bloomPass);
 
-function addStar(radiusStart, radiusEnd) {
-    const geometry = new THREE.SphereGeometry(0.25, 24, 24);
+function createStars(count, radiusStart, radiusEnd) {
+    const geometry = new THREE.SphereGeometry(0.25, 8, 8);
     const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const star = new THREE.Mesh(geometry, material);
+    const stars = new THREE.InstancedMesh(geometry, material, count);
+    const dummy = new THREE.Object3D();
 
-    const radius = THREE.MathUtils.randFloat(radiusStart, radiusEnd);
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.random() * Math.PI;
+    for (let i = 0; i < count; i++) {
+        const radius = THREE.MathUtils.randFloat(radiusStart, radiusEnd);
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
 
-    const x = radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.sin(phi) * Math.sin(theta);
-    const z = radius * Math.cos(phi);
-
-    star.position.set(x, y, z);
-    scene.add(star);
+        dummy.position.set(
+            radius * Math.sin(phi) * Math.cos(theta),
+            radius * Math.sin(phi) * Math.sin(theta),
+            radius * Math.cos(phi)
+        );
+        dummy.updateMatrix();
+        stars.setMatrixAt(i, dummy.matrix);
+    }
+    scene.add(stars);
 }
 
-const starsRadiusStart = 500;
-const starsRadiusEnd = 750;
-Array(300).fill().forEach(() => addStar(starsRadiusStart, starsRadiusEnd));
+createStars(300, 500, 750);
 
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
@@ -179,11 +182,13 @@ langButtons.forEach(btn => {
             textContainer.classList.add('hidden');
             textVisible = false;
             btn.classList.remove('active');
+            controls.enabled = true;
             return;
         }
 
         textVisible = true;
         textContainer.classList.remove('hidden');
+        controls.enabled = false;
         langButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
@@ -202,6 +207,7 @@ textToggle.addEventListener('click', () => {
     textVisible = !textVisible;
     textContainer.classList.toggle('hidden');
     textToggle.classList.toggle('active');
+    controls.enabled = !textVisible;
 });
 
 // Speed slider
