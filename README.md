@@ -6,9 +6,10 @@ An interactive 3D visualization of a Dyson Sphere — a hypothetical megastructu
 
 ## Features
 
-- 3D Dyson ring/sphere with animated shader-based opacity mapping
-- Inner wireframe structure
-- Orbit controls for camera movement
+- 3D Dyson ring with transparent texture and inner wireframe structure
+- Emissive sun with lens flare effect
+- Multi-layer star field for parallax depth
+- Orbit controls for free camera movement (when text is hidden)
 - Adjustable animation speed (0.1× to 5×)
 - Wikipedia article text in English, German, and Japanese
 - Responsive layout for mobile devices
@@ -18,7 +19,7 @@ An interactive 3D visualization of a Dyson Sphere — a hypothetical megastructu
 
 - [Three.js](https://threejs.org/) (v0.178) — 3D rendering
 - [Vite](https://vite.dev/) (v8.2) — build tooling
-- WebGL, GLSL shaders, HTML/CSS
+- WebGL, HTML/CSS
 
 ## Installation
 
