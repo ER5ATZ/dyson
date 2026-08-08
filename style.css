@@ -13,13 +13,13 @@ header {
 
 main#text {
     position: absolute;
-    top: 0px;
+    top: -140px;
     z-index: 99;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     font-family: "Gill Sans", sans-serif;
     opacity: 0.7;
-    padding: 20px 0px;
+    padding: 120px 0px;
     transition: top 0.5s ease 0.3s, opacity 0.5s ease 0.3s;
 }
 
@@ -31,10 +31,23 @@ main#text.hidden {
 }
 
 footer {
-    grid-column: 2 / 8;
     z-index: 99;
     position: fixed;
+    bottom: 1rem;
+    left: 1rem;
     background: black;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+footer span {
+    font-size: 1.5rem;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 section {
@@ -46,5 +59,128 @@ section {
 
 a, span {
     color: white;
+    display: inline;
     cursor: default;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+    main#text {
+        grid-template-columns: 1fr;
+        padding: 60px 0;
+    }
+
+    header {
+        grid-column: 1;
+        padding: 1rem;
+    }
+
+    section {
+        grid-column: 1;
+        padding: 1rem;
+    }
+
+    footer {
+        bottom: 0.5rem;
+        left: 0.5rem;
+    }
+}
+
+/* Settings panel */
+.settings-panel {
+    position: fixed;
+    bottom: 4rem;
+    left: 1rem;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-family: "Gill Sans", sans-serif;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 160px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.settings-panel.hidden {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.setting-btn {
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+    user-select: none;
+}
+
+.setting-btn.active {
+    opacity: 1;
+}
+
+.setting-btn:hover {
+    opacity: 0.8;
+}
+
+.setting-label {
+    font-size: 1rem;
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+.settings-panel input[type="range"] {
+    flex: 1;
+    cursor: pointer;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #444;
+    border-radius: 2px;
+    outline: none;
+}
+
+.settings-panel input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #111;
+    border: 1px solid #666;
+    cursor: pointer;
+}
+
+.settings-panel input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #111;
+    border: 1px solid #666;
+    cursor: pointer;
+}
+
+.settings-panel input[type="range"]::-moz-range-track {
+    background: #444;
+    height: 4px;
+    border-radius: 2px;
+}
+
+.settings-panel span:last-child {
+    min-width: 2rem;
+    text-align: right;
+    font-size: 0.8rem;
+    opacity: 0.7;
 }

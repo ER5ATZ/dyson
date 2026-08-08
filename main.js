@@ -1,10 +1,10 @@
 import './style.css'
 
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -17,47 +17,16 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.set(0, 0, 30);
 
-renderer.render(scene, camera);
-
 const sunTexture = new THREE.TextureLoader().load('sun.jpg');
-const normalTexture = new THREE.TextureLoader().load('sunno.jpg');
 const sun = new THREE.Mesh(
     new THREE.SphereGeometry(3, 32, 32),
     new THREE.MeshStandardMaterial({
         map: sunTexture,
-        normalMap: normalTexture
+        emissiveMap: sunTexture,
+        emissive: new THREE.Color(0xffffff),
+        emissiveIntensity: 1.0
     }));
 scene.add(sun);
-
-const customUniforms = {
-    opacityMap: { value: new THREE.TextureLoader().load('rineg.png') },
-    time: { value: 0.0 }
-};
-const customMaterial = new THREE.ShaderMaterial({
-    uniforms: customUniforms,
-    vertexShader: `
-            uniform float time;
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                float offset = sin(time * 2.0) * 0.1;
-                vUv.x += offset;
-                vUv.y += offset;
-                vec3 newPosition = position.xyz;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-            }
-        `,
-    fragmentShader: `
-            uniform sampler2D opacityMap;
-            varying vec2 vUv;
-            void main() {
-                vec4 opacityMapSample = texture2D(opacityMap, vUv);
-                float opacity = opacityMapSample.r;
-                gl_FragColor = vec4(1.0, 1.0, 1.0, opacity);
-            }
-        `,
-    transparent: true
-});
 
 const texture = new THREE.TextureLoader().load('ring.png');
 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -135,23 +104,31 @@ Array(300).fill().forEach(() => addStar(starsRadiusStart, starsRadiusEnd));
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
 
+// --- Animation speed ---
+let speedMultiplier = 1.0;
+
+// --- Window resize handler ---
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
+});
+
 function animate() {
     requestAnimationFrame(animate);
-    customMaterial.uniforms.time.value += 0.01;
-    const time = customMaterial.uniforms.time.value;
-    ring.rotation.x += 0.0001;
-    ring.rotation.y += 0.0001;
-    ring.rotation.z += 0.0002;
-    innerRing.rotation.x += 0.0001;
-    innerRing.rotation.y += 0.0001;
-    innerRing.rotation.z += 0.0002;
-    sun.rotation.z -= 0.00009;
+    ring.rotation.x += 0.0001 * speedMultiplier;
+    ring.rotation.y += 0.0001 * speedMultiplier;
+    ring.rotation.z += 0.0002 * speedMultiplier;
+    innerRing.rotation.x += 0.0001 * speedMultiplier;
+    innerRing.rotation.y += 0.0001 * speedMultiplier;
+    innerRing.rotation.z += 0.0002 * speedMultiplier;
+    sun.rotation.z -= 0.00009 * speedMultiplier;
     controls.update();
     composer.render(scene, camera);
 }
 
 let targetCameraPosition = new THREE.Vector3();
-let targetCameraRotation = new THREE.Euler();
 
 function moveCamera() {
     const scrollPosition = document.body.getBoundingClientRect().top;
@@ -163,10 +140,7 @@ function moveCamera() {
     const zoomLevel = THREE.MathUtils.lerp(minZoom, maxZoom, (t + 1) / 2);
 
     targetCameraPosition.set(0, 0, zoomLevel);
-    targetCameraRotation.set(0, 0, 0);
-
     camera.position.lerp(targetCameraPosition, 0.1);
-    camera.rotation.y = targetCameraRotation.y;
 
     sun.rotation.x += 0.05;
     sun.rotation.y += 0.075;
@@ -176,13 +150,66 @@ function moveCamera() {
 moveCamera();
 document.body.onscroll = moveCamera;
 
-const toggle = document.getElementById('toggle');
+// --- UI: Settings panel ---
+const settingsBtn = document.getElementById('settings-btn');
+const settingsPanel = document.getElementById('settings-panel');
 const textContainer = document.getElementById('text');
-let isVisible = true;
-toggle.addEventListener('click', () => {
+
+settingsBtn.addEventListener('click', () => {
+    settingsPanel.classList.toggle('hidden');
+});
+
+// Language buttons (EN / DE / 日本) — toggle text on/off or switch language
+const langButtons = document.querySelectorAll('.lang-btn');
+let currentLang = 'en';
+let textVisible = true;
+
+// Load English content on startup
+fetch('content/en.html')
+    .then(r => r.text())
+    .then(html => {
+        textContainer.innerHTML = html;
+    });
+
+langButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const lang = btn.id.replace('lang-', '');
+
+        if (lang === currentLang && textVisible) {
+            textContainer.classList.add('hidden');
+            textVisible = false;
+            btn.classList.remove('active');
+            return;
+        }
+
+        textVisible = true;
+        textContainer.classList.remove('hidden');
+        langButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        fetch(`content/${lang}.html`)
+            .then(r => r.text())
+            .then(html => {
+                textContainer.innerHTML = html;
+                currentLang = lang;
+            });
+    });
+});
+
+// Text toggle button
+const textToggle = document.getElementById('text-toggle');
+textToggle.addEventListener('click', () => {
+    textVisible = !textVisible;
     textContainer.classList.toggle('hidden');
+    textToggle.classList.toggle('active');
+});
+
+// Speed slider
+const speedSlider = document.getElementById('speed-slider');
+const speedValue = document.getElementById('speed-value');
+speedSlider.addEventListener('input', () => {
+    speedMultiplier = parseFloat(speedSlider.value);
+    speedValue.textContent = speedMultiplier.toFixed(1) + '×';
 });
 
 animate();
-//console.log(scene);
-document.body.appendChild(renderer.domElement);

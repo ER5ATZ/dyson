@@ -1,53 +1,55 @@
 # Dyson Sphere Project
 
-
 ## Overview
 
-The Dyson Sphere Project aims to educate on the concept of Dyson Spheres in a visually engaging manner. It combines space textures, 3D modeling, and interactive elements to provide an immersive experience.
+An interactive 3D visualization of a Dyson Sphere — a hypothetical megastructure that encompasses a star to capture its energy output. The project combines space textures, shader-based effects, and interactive elements to visualize the concept.
 
 ## Features
 
-- Interactive 3D visualization of the concept of Dyson Spheres
-- Realistic space textures and lighting effects
-- User-controlled camera movements
+- 3D Dyson ring/sphere with animated shader-based opacity mapping
+- Inner wireframe structure
+- Orbit controls for camera movement
+- Adjustable animation speed (0.1× to 5×)
+- Wikipedia article text in English, German, and Japanese
+- Responsive layout for mobile devices
+- Post-processing bloom effects
 
-## Technologies Used
+## Technologies
 
-- Vite.js
-- Three.js
-- WebGL
-- HTML/CSS
+- [Three.js](https://threejs.org/) (v0.178) — 3D rendering
+- [Vite](https://vite.dev/) (v8.2) — build tooling
+- WebGL, GLSL shaders, HTML/CSS
 
 ## Installation
 
-To run the project locally, follow these steps:
-
 ```bash
-# Clone the repository
 git clone https://github.com/ER5ATZ/dyson.git
-
-# Change directory to the project folder
 cd dyson
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm run dev
 ```
 
-## Usage
+## Deployment
 
-Explore the interactive Dyson Sphere visualization by opening the provided URL in a modern web browser.
+Deployed automatically to GitHub Pages on push to `main` via GitHub Actions.
+
+Live: https://er5atz.github.io/dyson/
 
 ## Sources
 
-- [Wikipedia - Dyson Sphere](https://en.wikipedia.org/wiki/Dyson_sphere)
-- [Space Textures Library](https://www.solarsystemscope.com/textures/)
+- [Wikipedia — Dyson sphere (EN)](https://en.wikipedia.org/wiki/Dyson_sphere)
+- [Wikipedia — Dyson-Sphäre (DE)](https://de.wikipedia.org/wiki/Dyson-Sph%C3%A4re)
+- [Wikipedia — ダイソン球 (JA)](https://ja.wikipedia.org/wiki/%E3%83%80%E3%82%A4%E3%82%BD%E3%83%B3%E7%90%83)
+- [Solar System Scope Textures](https://www.solarsystemscope.com/textures/)
 - [Ring Texture (edited)](https://ambientcg.com/view?id=Tiles129B)
 - [Three.js Documentation](https://threejs.org/docs/)
 
+## License
+
+Code: [MIT License](LICENSE)
+
+Text content (`public/content/`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — adapted from Wikipedia contributors.
+
 ## Credits
 
-- Project developed by Andreas Ersch
-- Special thanks to fireship.io and open-source libraries used in the project.
+Developed by Andreas Ersch. Special thanks to fireship.io and open-source libraries used in the project.
