@@ -11,7 +11,7 @@ An interactive 3D visualization of a Dyson Sphere — a hypothetical megastructu
 - Multi-layer star field for parallax depth
 - Orbit controls for free camera movement (when text is hidden)
 - Adjustable animation speed (0.1× to 5×)
-- Wikipedia article text in English, German, and Japanese
+- Wikipedia article text in English, German, and Japanese (with furigana/ruby annotations for Japanese)
 - Responsive layout for mobile devices
 - Post-processing bloom effects
 
@@ -49,7 +49,7 @@ Live: https://er5atz.github.io/dyson/
 
 Code: [MIT License](LICENSE)
 
-Text content (`public/content/`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — adapted from Wikipedia contributors.
+Text content (`public/content/`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — adapted from Wikipedia contributors. Multilingual articles edited and consolidated using Claude Haiku 4.5.
 
 ## Credits
 
